@@ -77,3 +77,35 @@ Vị trí AP `(-3,-1)` là ví dụ thí nghiệm cũ; thay theo bài thử th�
    thực sự bao toàn bộ thân và bánh mới trước thử tránh vật cản.
 6. World/map trong repo là bản snapshot. Đừng coi RSSI mô phỏng là phép
    đo RF thật, và đừng coi Gazebo planar_move là mô hình động học/ma sát bánh.
+
+<!-- LTMANG_MANUAL_TELEOP_BEGIN -->
+## Điều khiển thủ công bằng Keyboard Teleop
+
+Package: `ros2_ws/src/keyboard_teleop/` (ROS 2 Python, phím bấm đọc qua TTY).
+Script: `scripts/run_teleop.sh`. Dùng thay cho `run_navigation.sh` để tránh
+hai publisher tranh nhau `/cmd_vel`. AMCL vẫn chạy để duy trì TF cho RSSI.
+
+```bash
+# Build lần đầu (hoặc sau khi cập nhật package)
+cd ~/LTMANG/simulation/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-select keyboard_teleop
+
+# Terminal 1: Gazebo
+bash ~/LTMANG/simulation/scripts/run_gazebo.sh
+# Terminal 2: AMCL
+bash ~/LTMANG/simulation/scripts/run_localization.sh
+# Terminal 3: RViz2 (tùy chọn)
+bash ~/LTMANG/simulation/scripts/run_rviz.sh
+# Terminal 4: Điều khiển từ bàn phím, KHÔNG chạy Nav2 Navigation
+bash ~/LTMANG/simulation/scripts/run_teleop.sh
+```
+
+Phím: `w` tiến, `x` lùi, `a/d` quay, `q/e` trượt ngang,
+`1/2/3` tốc độ chậm/thường/nhanh, `s` hoặc Space dừng, `z` thoát.
+Chương trình duy trì vận tốc cho đến khi có lệnh mới; luôn nhấn `s`
+để dừng robot sau mỗi thao tác. Các giới hạn lệnh có thể bị relay giảm thêm.
+
+Khi TF `map -> base_footprint` hoạt động, chạy `rssi_sim.py` ở root để ghi CSV,
+sau đó chạy `analyze_rssi.py`. Xem [README gốc](../README.md).
+<!-- LTMANG_MANUAL_TELEOP_END -->

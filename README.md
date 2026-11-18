@@ -1,9 +1,9 @@
 # Khảo sát chất lượng Wi-Fi khu C bằng robot mecanum (PBL3 – Mạng máy tính)
 
 <!-- LTMANG_WORKFLOW_BEGIN -->
-## Quy trình chạy đầy đủ: Gazebo → Nav2 → RSSI Simulator → Analysis
+## Quy trình vận hành: Gazebo → (Nav2 hoặc Keyboard Teleop) → RSSI → Analysis
 
-Dự án mô phỏng robot **Mecanum** khảo sát cường độ tín hiệu Wi-Fi trong hành lang bằng **ROS 2 Humble**, **Gazebo Classic**, **Nav2**, mô hình RSSI và công cụ phân tích dữ liệu. Robot di chuyển theo mục tiêu Nav2; `rssi_sim.py` lấy vị trí robot từ TF, ước lượng RSSI theo vị trí và lưu CSV; `analyze_rssi.py` xử lý CSV và tạo kết quả trực quan hóa.
+Dự án mô phỏng robot **Mecanum** khảo sát cường độ tín hiệu Wi-Fi trong hành lang bằng **ROS 2 Humble**, **Gazebo Classic**, **Nav2**, mô hình RSSI và công cụ phân tích dữ liệu. Robot có thể tự hành bằng Nav2 hoặc lái tay bằng bàn phím; `rssi_sim.py` lấy vị trí robot từ TF, ước lượng RSSI theo vị trí và lưu CSV; `analyze_rssi.py` xử lý CSV và tạo kết quả trực quan hóa.
 
 > **Phân biệt:** Dữ liệu từ `rssi_sim.py` là **RSSI mô phỏng**, không phải phép đo Wi-Fi bằng phần cứng. Các lệnh dưới đây chạy trên **PC Ubuntu** với `ROS_DOMAIN_ID=31`, `ROS_LOCALHOST_ONLY=1`, độc lập với Mini PC của robot thật.
 
@@ -13,11 +13,12 @@ Dự án mô phỏng robot **Mecanum** khảo sát cường độ tín hiệu Wi
 |---|---|
 | `simulation/ros2_ws/src/mecanum_robot_viz/` | URDF, mesh, cấu hình hiển thị robot trong Gazebo/RViz2 |
 | `simulation/ros2_ws/src/mecanum_visual_animator/` | Plugin hình ảnh bánh Mecanum và `/joint_states` |
+| `simulation/ros2_ws/src/keyboard_teleop/` | Package ROS 2 điều khiển Mecanum bằng bàn phím |
 | `simulation/launch/mecanum_gazebo_corridor_repo.launch.py` | Khởi động world hành lang, spawn robot, robot_state_publisher, relay |
 | `simulation/maps/my_map_corridor.world` | Môi trường hành lang Gazebo |
 | `simulation/maps/my_map.yaml` và ảnh bản đồ | Bản đồ cho AMCL, Nav2 và phân tích RSSI |
 | `simulation/config/nav2_params_mecanum_sim.yaml` | Cấu hình AMCL, controller, planner, costmap, footprint, `use_sim_time` |
-| `simulation/scripts/` | Lệnh khởi chạy Gazebo, localization, navigation, RViz2 |
+| `simulation/scripts/` | Lệnh khởi chạy Gazebo, localization, navigation, RViz2 và `run_teleop.sh` |
 | `rssi_sim.py` | Mô phỏng RSSI từ tọa độ robot, publish `/wifi/rssi_dbm` và ghi CSV |
 | `analyze_rssi.py` | Phân tích CSV và tạo heatmap/đồ thị |
 | `result_te1n/` | Kết quả thí nghiệm cũ; không ghi đè |
@@ -73,7 +74,7 @@ ros2 lifecycle get /amcl
 
 Cả hai cần ở trạng thái `active [3]`. Vị trí AMCL ban đầu `(5.0, 0.0, 0)` chỉ phù hợp nếu hệ tọa độ world và map đã được căn chỉnh; nếu robot hiển thị sai vị trí, dùng **2D Pose Estimate** trong RViz2.
 
-### 5. Khởi động Nav2 Navigation — Terminal 3
+### 5. Chế độ A — Nav2 Navigation (tự hành) — Terminal 3
 
 ```bash
 cd ~/LTMANG
@@ -107,9 +108,41 @@ source ~/LTMANG/simulation/scripts/sim_env.sh
 ros2 run tf2_ros tf2_echo map base_footprint
 ```
 
-### 7. Chạy mô phỏng RSSI và thu thập CSV — Terminal 5
+### 7. Chế độ B — Điều khiển bàn phím (thay cho Nav2)
 
-Chỉ chạy khi AMCL đã định vị và có TF `map → base_footprint`. Trong Terminal riêng:
+Chế độ này giúp lái robot khảo sát Wi-Fi theo quỹ đạo thủ công. **Chạy Gazebo (mục 3), AMCL (mục 4), rồi Keyboard Teleop; không khởi động `run_navigation.sh`.** Có thể mở RViz2 (mục 6) để theo dõi bản đồ và LiDAR. AMCL phải cung cấp TF `map → base_footprint` để RSSI Simulator lưu vị trí robot trong hệ tọa độ map.
+
+Sau khi clone mới hoặc thêm package lần đầu, build trong Terminal:
+
+```bash
+cd ~/LTMANG/simulation/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-select keyboard_teleop
+```
+
+Mở **Terminal có bàn phím trực tiếp** và chạy:
+
+```bash
+cd ~/LTMANG
+bash simulation/scripts/run_teleop.sh
+```
+
+| Phím | Thao tác |
+|---|---|
+| `w` / `x` | Tiến / lùi (mức tốc độ đang chọn) |
+| `a` / `d` | Xoay trái / phải |
+| `q` / `e` | Đi ngang trái / phải (Mecanum) |
+| `1` / `2` / `3` | Tốc độ chậm / thường / nhanh |
+| `s` hoặc `Space` | Dừng toàn bộ chuyển động |
+| `z` | Dừng và thoát chương trình |
+
+Mỗi lần nhấn phím sẽ **duy trì lệnh vận tốc** cho đến khi có phím khác thay đổi trạng thái; `s`/`Space` dừng cả ba trục. Khi nhấn lần lượt `w` rồi `a`, robot sẽ vừa tiến vừa quay, vì các thành phần vận tốc được giữ độc lập. Không chạy qua `ros2 launch` do node cần TTY thật. Script kiểm tra để tránh Nav2 và keyboard cùng xuất `/cmd_vel`.
+
+Sau khi lái tay hoặc Nav2 di chuyển, dùng chung bước 8–9 để thu thập RSSI và phân tích CSV.
+
+### 8. Chạy mô phỏng RSSI và thu thập CSV — Terminal 5
+
+Dùng chung cho cả hai chế độ **Nav2 hoặc Keyboard Teleop**. Chỉ chạy khi AMCL đã định vị và có TF `map → base_footprint`. Trong Terminal riêng:
 
 ```bash
 cd ~/LTMANG
@@ -133,7 +166,7 @@ head -n 5 ~/LTMANG/result_sim_new/rssi_corridor.csv
 
 Khi đã thu thập đủ quỹ đạo, dừng `rssi_sim.py` bằng **Ctrl+C**, đảm bảo file CSV đã được ghi hoàn chỉnh. **Không chạy `analyze_rssi.py` khi chưa có CSV hợp lệ.**
 
-### 8. Phân tích dữ liệu sau thu thập — Terminal 6
+### 9. Phân tích dữ liệu sau thu thập — Terminal 6
 
 ```bash
 cd ~/LTMANG
@@ -152,13 +185,14 @@ find ~/LTMANG/result_sim_new/analysis -maxdepth 2 -type f
 
 Đầu ra của bước này là các file phân tích/trực quan hóa từ CSV, phục vụ đánh giá phân bố RSSI trong hành lang. Có thể tham khảo tham số của script bằng `python3 analyze_rssi.py --help`.
 
-### 9. Sơ đồ luồng dữ liệu
+### 10. Sơ đồ luồng dữ liệu
 
 ```mermaid
 flowchart TD
     G[Gazebo: Mecanum + corridor world] -->|/odom, /scan| L[AMCL + bản đồ /map]
     L -->|map → odom → base_footprint| N[Nav2: planner + controller]
-    N -->|/cmd_vel| R[Safe Command Relay]
+    N -->|/cmd_vel, chế độ tự hành| R[Safe Command Relay]
+    K[Keyboard Teleop: chế độ lái tay] -->|/cmd_vel khi Nav2 đã dừng| R
     R -->|/cmd_vel_gazebo| G
     L -->|/map và TF vị trí| S[rssi_sim.py]
     S -->|/wifi/rssi_dbm| T[Giám sát ROS 2]
@@ -167,14 +201,14 @@ flowchart TD
     A --> H[Heatmap và dữ liệu phân tích]
 ```
 
-### 10. Ghi chú quan trọng
+### 11. Ghi chú quan trọng
 
 - Cần giữ **cùng map** cho AMCL, RSSI Simulator và Analysis; `simulation/maps/` là bản snapshot của mô phỏng mới, khác với dữ liệu thí nghiệm cũ trong `maps/`.
 - Robot dùng hai URDF phù hợp cho Gazebo và RViz2. Không khởi chạy thêm `mecanum_rviz_joint_states.py` khi Gazebo đã phát `/joint_states`.
 - Footprint trong Nav2 YAML phải bao phủ được phần thân/bánh thật; xác minh hình học trước khi đánh giá va chạm ở hành lang hẹp.
 - Safe Relay có thể giới hạn vận tốc thấp hơn Nav2; kiểm tra `/cmd_vel` và `/cmd_vel_gazebo` nếu robot đi chậm hoặc planner bị timeout.
 - Kết quả RSSI là **dữ liệu giả lập theo mô hình suy hao**, không chứng minh chất lượng sóng đo thực tế.
-- Giữ các Terminal Gazebo/AMCL/Nav2/RViz2 hoạt động trong lúc đo RSSI; chỉ chạy Analysis sau khi kết thúc thu thập.
+- Giữ Gazebo/AMCL chạy trong lúc thu thập RSSI; dùng **một** nguồn lái tại một thời điểm (Nav2 **hoặc** keyboard). Chỉ chạy Analysis sau khi kết thúc thu thập.
 
 <!-- LTMANG_WORKFLOW_END -->
 
