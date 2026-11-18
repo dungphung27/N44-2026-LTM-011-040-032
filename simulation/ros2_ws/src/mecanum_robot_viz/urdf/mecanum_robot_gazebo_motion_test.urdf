@@ -1,0 +1,211 @@
+<robot name="mecanum_robot">
+  <link name="Link001">
+    <visual>
+      <origin xyz="0.125596920 -0.103782160 0.193158438" rpy="2.527709786365 -1.550963446087 -0.942952687491" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_FrontLeftWheel.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="0 0 0" rpy="0.000000000 0.000000000 0.000000000" />
+      <geometry>
+        <cylinder radius="0.0475" length="0.044" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link003">
+    <visual>
+      <origin xyz="0.105338934 0.186928319 -0.198038577" rpy="-1.003375404456 1.536764915176 -1.000927927338" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror006.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="0 0 0" rpy="0.000000000 0.000000000 0.000000000" />
+      <geometry>
+        <cylinder radius="0.0475" length="0.044" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link004">
+    <visual>
+      <origin xyz="0.107214428 0.119863621 -0.146371413" rpy="0.544894543598 -1.547857114379 2.585552194384" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror005.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="0 0 0" rpy="0.000000000 0.000000000 0.000000000" />
+      <geometry>
+        <cylinder radius="0.0475" length="0.044" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link005">
+    <visual>
+      <origin xyz="-0.194390269 -0.099872147 -0.148641905" rpy="-2.879529643651 -1.553884601355 -1.835182501163" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_RearRightWheel.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="0 0 0" rpy="0.000000000 0.000000000 0.000000000" />
+      <geometry>
+        <cylinder radius="0.0475" length="0.044" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link006">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 1.570796326794897" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/base_2floors_direct.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="5.000000000" />
+      <inertia ixx="0.083333333333" ixy="0" ixz="0" iyy="0.097333333333" iyz="0" izz="0.147333333333" />
+    </inertial>
+  </link>
+  <joint name="Joint002" type="fixed">
+    <parent link="Link006" />
+    <child link="Link001" />
+    <origin xyz="-0.196384 0.121901 -0.102365" rpy="-0.0 1.5707963267948966 0.0" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <joint name="Joint003" type="fixed">
+    <parent link="Link006" />
+    <child link="Link003" />
+    <origin xyz="-0.194316 -0.192197 -0.102247" rpy="-1.663734658135954 1.545735218935365 -1.638752644311109" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <joint name="Joint005" type="fixed">
+    <parent link="Link006" />
+    <child link="Link005" />
+    <origin xyz="0.146145 -0.194788 -0.102727" rpy="1.5730652548199924 1.5706217938696971 1.5728907223095023" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <joint name="Joint006" type="fixed">
+    <parent link="Link006" />
+    <child link="Link004" />
+    <origin xyz="0.146954 0.122779 -0.102996" rpy="-1.308573487728714 1.5621169392890664 -1.300200211269266" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.001000000" />
+      <inertia ixx="0.000000016667" ixy="0" ixz="0" iyy="0.000000016667" iyz="0" izz="0.000000016667" />
+    </inertial>
+  </link>
+  <joint name="base_link_to_Link006" type="fixed">
+    <parent link="base_link" />
+    <child link="Link006" />
+    <origin xyz="0 0 0" rpy="0 0 -1.5707963267948966" />
+  </joint>
+  <link name="Link008">
+    <visual>
+      <origin xyz="1.42109e-17 2.30926e-17 -2.84217e-17" rpy="3.3306690738754696e-16 3.4694469519536138e-18 1.7347234759768075e-18" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_ROS_khunggam_RPLIDAR_C001.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.200000000" />
+      <inertia ixx="0.000123333333" ixy="0" ixz="0" iyy="0.000123333333" iyz="0" izz="0.000163333333" />
+    </inertial>
+  </link>
+  <joint name="Joint007" type="fixed">
+    <parent link="Link006" />
+    <child link="Link008" />
+    <origin xyz="0.010760804 -0.016581651 0.001199270" rpy="0.0 -0.0 0.0" />
+  </joint>
+  <gazebo reference="Link001">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="Link003">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="Link004">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="Link005">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo>
+    <plugin name="safe_mecanum_planar" filename="libgazebo_ros_planar_move.so">
+      <ros>
+        <remapping>cmd_vel:=/cmd_vel_gazebo</remapping>
+        <remapping>odom:=/odom</remapping>
+      </ros>
+      <update_rate>1000</update_rate>
+      <publish_rate>30</publish_rate>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <covariance_x>0.0001</covariance_x>
+      <covariance_y>0.0001</covariance_y>
+      <covariance_yaw>0.01</covariance_yaw>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin name="mecanum_gui_only_wheels" filename="libmecanum_visual_animator.so">
+      <topic>/cmd_vel_gazebo</topic>
+      <wheel_radius>0.048</wheel_radius>
+      <half_length>0.171</half_length>
+      <half_width>0.157</half_width>
+      <max_wheel_rad_s>3.0</max_wheel_rad_s>
+      <wheel joint="Joint002" link="base_link" visual="base_link_fixed_joint_lump__Link001_visual_1" pose="0.018119 0.003226 -0.227962 1.58466 0.011649 -1.58685" pivot="0.121901 0.196384 -0.102365" axis="6.12323399574e-17 -1 6.12323399574e-17" sign="-1.0" />
+      <wheel joint="Joint003" link="base_link" visual="base_link_fixed_joint_lump__Link003_visual_2" pose="-0.01296 0.397145 -0.211756 -3.1189 0.015313 1.62485" pivot="-0.192197 0.194316 -0.102247" axis="0.0249503407579 -0.999685986872 -0.0023255425457" sign="-1.0" />
+      <wheel joint="Joint006" link="base_link" visual="base_link_fixed_joint_lump__Link004_visual_4" pose="0.240511 0.000166 -0.21154 3.12192 -0.021631 -1.55014" pivot="0.122779 -0.146954 -0.102996" axis="0.00838258731283 -0.999962334353 0.00224991240117" sign="-1.0" />
+      <wheel joint="Joint005" link="base_link" visual="base_link_fixed_joint_lump__Link005_visual_3" pose="-0.294668 0.002514 0.091646 1.56868 -0.004416 -1.5873" pivot="-0.194788 -0.146145 -0.102727" axis="-0.000174532475046 -0.999999984769 -3.96002303504e-07" sign="-1.0" />
+    </plugin>
+  </gazebo>
+</robot>

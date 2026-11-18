@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="mecanum_robot">
+  
+  <link name="Link001">
+    <visual>
+      
+      <origin xyz="0.121462368 0.198022324 0.099446254" rpy="-1.734914387733744e-18 0.014835298641951811 1.5730652548224895" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_FrontLeftWheel.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      
+      <origin xyz="0.121462368 0.198022324 0.099446254" rpy="-1.734914387733744e-18 0.014835298641951811 1.5730652548224895" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_FrontLeftWheel.dae" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0" />
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  <link name="Link003">
+    <visual>
+      
+      <origin xyz="0.107027407 -0.192124262 -0.192070736" rpy="-1.568527398767304 -5.551115123125783e-17 -1.5481115566688224" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror006.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      
+      <origin xyz="0.107027407 -0.192124262 -0.192070736" rpy="-1.568527398767304 -5.551115123125783e-17 -1.5481115566688224" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror006.dae" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0" />
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  <link name="Link004">
+    <visual>
+      
+      <origin xyz="0.103612159 -0.146339724 -0.123028523" rpy="1.5730652548224893 -6.661338147750939e-16 1.5769101793499174" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror005.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      
+      <origin xyz="0.103612159 -0.146339724 -0.123028523" rpy="1.5730652548224893 -6.661338147750939e-16 1.5769101793499174" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror005.dae" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0" />
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  <link name="Link005">
+    <visual>
+      
+      <origin xyz="-0.194497014 -0.102730995 -0.146539048" rpy="-1.570796326795 -1.568701931278 -3.141592653590" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_RearRightWheel.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      
+      <origin xyz="-0.194497014 -0.102730995 -0.146539048" rpy="-1.570796326795 -1.568701931278 -3.141592653590" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_RearRightWheel.dae" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0" />
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  <link name="Link006">
+    <visual>
+      
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 1.5707963267948966" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Base_ROS_Geometry___X_Forward_.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 1.5707963267948966" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Base_ROS_Geometry___X_Forward_.dae" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0" />
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  <joint name="Joint002" type="continuous">
+    <parent link="Link006" />
+    <child link="Link001" />
+    <origin xyz="-0.196384 0.121901 -0.102365" rpy="-0.0 1.5707963267948966 0.0" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <joint name="Joint003" type="continuous">
+    <parent link="Link006" />
+    <child link="Link003" />
+    <origin xyz="-0.194316 -0.192197 -0.102247" rpy="-1.663734658135954 1.545735218935365 -1.638752644311109" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <joint name="Joint005" type="continuous">
+    <parent link="Link006" />
+    <child link="Link005" />
+    <origin xyz="0.146145 -0.194788 -0.102727" rpy="1.5730652548199924 1.5706217938696971 1.5728907223095023" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <joint name="Joint006" type="continuous">
+    <parent link="Link006" />
+    <child link="Link004" />
+    <origin xyz="0.146954 0.122779 -0.102996" rpy="-1.308573487728714 1.5621169392890664 -1.300200211269266" />
+    <axis xyz="0 0 1" />
+  </joint>
+<link name="base_link" /><joint name="base_link_to_Link006" type="fixed"><parent link="base_link" /><child link="Link006" /><origin xyz="0 0 0" rpy="0 0 -1.5707963267948966" /></joint></robot>

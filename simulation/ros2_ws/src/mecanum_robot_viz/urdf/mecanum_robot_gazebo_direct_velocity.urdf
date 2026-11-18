@@ -1,0 +1,218 @@
+<robot name="mecanum_robot">
+  <link name="Link001">
+    <visual>
+      <origin xyz="0.125596920 -0.103782160 0.193158438" rpy="2.527709786365 -1.550963446087 -0.942952687491" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_FrontLeftWheel.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="0.000127611 -0.000070327 -0.000009004" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.048152159" length="0.060753421" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link003">
+    <visual>
+      <origin xyz="0.105338934 0.186928319 -0.198038577" rpy="-1.003375404456 1.536764915176 -1.000927927338" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror006.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="-0.000006090 0.000103307 -0.000119426" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.048151960" length="0.060740800" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link004">
+    <visual>
+      <origin xyz="0.107214428 0.119863621 -0.146371413" rpy="0.544894543598 -1.547857114379 2.585552194384" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_Mecanum_mirror005.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="0.000015994 0.000007596 -0.000025944" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.048154406" length="0.060805318" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link005">
+    <visual>
+      <origin xyz="-0.194390269 -0.099872147 -0.148641905" rpy="-2.879529643651 -1.553884601355 -1.835182501163" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_URDF_RearRightWheel.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.350000000" />
+      <inertia ixx="0.000364583333" ixy="0" ixz="0" iyy="0.000583333333" iyz="0" izz="0.000364583333" />
+    </inertial>
+    <collision name="simple_wheel_collision">
+      <origin xyz="-0.000021354 -0.000033744 0.000052335" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.048153538" length="0.060758197" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="Link006">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 1.570796326794897" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/base_2floors_direct.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="5.000000000" />
+      <inertia ixx="0.083333333333" ixy="0" ixz="0" iyy="0.097333333333" iyz="0" izz="0.147333333333" />
+    </inertial>
+  </link>
+  <joint name="Joint002" type="continuous">
+    <parent link="Link006" />
+    <child link="Link001" />
+    <origin xyz="-0.196384 0.121901 -0.102365" rpy="-0.0 1.5707963267948966 0.0" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="2.0" friction="0.5" />
+  </joint>
+  <joint name="Joint003" type="continuous">
+    <parent link="Link006" />
+    <child link="Link003" />
+    <origin xyz="-0.194316 -0.192197 -0.102247" rpy="-1.663734658135954 1.545735218935365 -1.638752644311109" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="2.0" friction="0.5" />
+  </joint>
+  <joint name="Joint005" type="continuous">
+    <parent link="Link006" />
+    <child link="Link005" />
+    <origin xyz="0.146145 -0.194788 -0.102727" rpy="1.5730652548199924 1.5706217938696971 1.5728907223095023" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="2.0" friction="0.5" />
+  </joint>
+  <joint name="Joint006" type="continuous">
+    <parent link="Link006" />
+    <child link="Link004" />
+    <origin xyz="0.146954 0.122779 -0.102996" rpy="-1.308573487728714 1.5621169392890664 -1.300200211269266" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="2.0" friction="0.5" />
+  </joint>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.001000000" />
+      <inertia ixx="0.000000016667" ixy="0" ixz="0" iyy="0.000000016667" iyz="0" izz="0.000000016667" />
+    </inertial>
+  </link>
+  <joint name="base_link_to_Link006" type="fixed">
+    <parent link="base_link" />
+    <child link="Link006" />
+    <origin xyz="0 0 0" rpy="0 0 -1.5707963267948966" />
+  </joint>
+  <link name="Link008">
+    <visual>
+      <origin xyz="1.42109e-17 2.30926e-17 -2.84217e-17" rpy="3.3306690738754696e-16 3.4694469519536138e-18 1.7347234759768075e-18" />
+      <geometry>
+        <mesh filename="package://mecanum_robot_viz/meshes/Mecanum_Robot_ROS_khunggam_RPLIDAR_C001.dae" />
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.200000000" />
+      <inertia ixx="0.000123333333" ixy="0" ixz="0" iyy="0.000123333333" iyz="0" izz="0.000163333333" />
+    </inertial>
+  </link>
+  <joint name="Joint007" type="fixed">
+    <parent link="Link006" />
+    <child link="Link008" />
+    <origin xyz="0.010760804 -0.016581651 0.001199270" rpy="0.0 -0.0 0.0" />
+  </joint>
+  <gazebo reference="Link001">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="Link003">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="Link004">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="Link005">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000</kp>
+    <kd>10</kd>
+    <maxVel>0.05</maxVel>
+    <minDepth>0.001</minDepth>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="Joint002">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="Joint003">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="Joint005">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+    <joint name="Joint006">
+      <command_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+    </joint>
+  </ros2_control>
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+      <parameters>/home/dungphung/mecanum_viz_ws/src/mecanum_robot_viz/config/mecanum_pid_brake.yaml</parameters>
+      <hold_joints>true</hold_joints>
+    </plugin>
+  </gazebo>
+</robot>

@@ -1,0 +1,100 @@
+<!--
+  nav2_recovery_backup_first.xml
+  ==============================
+  Behavior Tree cho NavigateToPose, uu tien LUI khi robot ket / dam vat can.
+
+  KHAC BT MAC DINH (navigate_to_pose_w_replanning_and_recovery.xml):
+
+    Mac dinh - thu tu RoundRobin:
+        1. ClearingActions (xoa costmap)
+        2. Spin (quay 1.57 rad tai cho)
+        3. Wait (cho 5 s)
+        4. BackUp (lui 0.30 m @ 0.025 m/s  = mat 12 GIAY)
+
+    File nay - thu tu moi:
+        1. BackUp (lui 0.35 m @ 0.10 m/s  = 3.5 s)
+        2. ClearingActions
+        3. Spin
+        4. Wait
+
+  LY DO DAO THU TU:
+    Khi robot DAM VAO TUONG, dong tac dau tien phai la THOAT RA. Quay tai
+    cho (Spin) trong luc dang ep vao tuong chi lam ket them  -  nhat la voi
+    robot 0.64 x 0.514 m can duong kinh 0.82 m de xoay.
+    Xoa costmap cung vo nghia neu vat can la THAT (tuong van con do).
+
+  LY DO TANG backup_speed:
+    Mac dinh 0.025 m/s -> lui 0.30 m mat 12 giay. Trong 12 giay do robot
+    chan duong va nguoi dung tuong no treo. 0.10 m/s -> 3.5 giay.
+
+  number_of_retries="6" o NavigateRecovery: sau 6 lan thu ma van that bai
+  thi Nav2 tra ve FAILURE cho action client  -  luc do tang ung dung cua
+  ban nen bao nguoi.
+
+  DAT FILE O DAU CUNG DUOC, mien la khai dung duong dan trong
+  nav2_params:  bt_navigator -> default_nav_to_pose_bt_xml
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+
+      <PipelineSequence name="NavigateWithReplanning">
+
+        <!-- Lap ke hoach lai 1 lan/giay -->
+        <RateController hz="1.0">
+          <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+            <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Context"
+                                service_name="global_costmap/clear_entirely_global_costmap"/>
+          </RecoveryNode>
+        </RateController>
+
+        <RecoveryNode number_of_retries="1" name="FollowPath">
+          <FollowPath path="{path}" controller_id="FollowPath"/>
+          <ClearEntireCostmap name="ClearLocalCostmap-Context"
+                              service_name="local_costmap/clear_entirely_local_costmap"/>
+        </RecoveryNode>
+
+      </PipelineSequence>
+
+      <!-- ===== CAC HANH VI PHUC HOI ===== -->
+      <ReactiveFallback name="RecoveryFallback">
+
+        <!-- Neu nguoi dung gui goal moi thi bo het recovery, lam goal moi -->
+        <GoalUpdated/>
+
+        <RoundRobin name="RecoveryActions">
+
+          <!-- (1) LUI TRUOC TIEN  -  day la cho khac BT mac dinh.
+               backup_dist 0.35 m  : hon nua than robot (0.32 m), du de
+                                     mui xe roi khoi vat can
+               backup_speed 0.10   : gap 4 lan mac dinh (0.025)
+               time_allowance 10   : bo cuoc sau 10 s neu khong lui duoc
+                                     (vi du bi ket ca phia sau) -->
+          <BackUp backup_dist="0.35" backup_speed="0.10" time_allowance="10"/>
+
+          <!-- (2) Xoa costmap: xu ly vat can MA (do nhieu LiDAR, nguoi
+               di qua da khuat) van con luu lai trong costmap -->
+          <Sequence name="ClearingActions">
+            <ClearEntireCostmap name="ClearLocalCostmap-Subtree"
+                                service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Subtree"
+                                service_name="global_costmap/clear_entirely_global_costmap"/>
+          </Sequence>
+
+          <!-- (3) Quay tai cho de LiDAR quet lai xung quanh.
+               1.57 rad = 90 deg (mac dinh cung 1.57). Robot nay can
+               duong kinh 0.82 m de xoay, nen buoc nay chi thanh cong
+               khi da lui ra cho rong o buoc (1). -->
+          <Spin spin_dist="1.57"/>
+
+          <!-- (4) Cho: danh cho vat can DONG (nguoi di qua). 5 s. -->
+          <Wait wait_duration="5"/>
+
+        </RoundRobin>
+      </ReactiveFallback>
+
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

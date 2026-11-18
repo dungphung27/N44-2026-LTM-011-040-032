@@ -178,3 +178,7 @@ LTMANG/
 
 ## 6. Yêu cầu
 Ubuntu 22.04, ROS 2 Humble, Gazebo Classic, Nav2, slam_toolbox, Python 3 (numpy, scipy, matplotlib, PyYAML).
+
+## Mô phỏng robot Mecanum mới (Gazebo Classic + Nav2)
+
+Đã bổ sung snapshot robot Gazebo/RViz2, plugin bánh Mecanum, LiDAR/IMU, world hành lang, bản đồ `my_map`, cấu hình Nav2 và script khởi chạy ở [`simulation/README.md`](simulation/README.md). Giữ nguyên pipeline RSSI và các kết quả `result_te1n/`. Thành phần mô phỏng chạy riêng trên PC (`ROS_DOMAIN_ID=31`); không sửa chương trình Mini PC robot thật.
