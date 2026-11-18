@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 _here="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$_here/sim_env.sh"
 ros2 launch nav2_bringup localization_launch.py use_sim_time:=true autostart:=true \
