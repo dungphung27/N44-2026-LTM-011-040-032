@@ -374,19 +374,89 @@ Thống kê theo khoảng cách tới AP (từ `result_te1n/cells.csv`):
 
 ## 5. Cấu trúc repo
 
-```
+Cấu trúc dưới đây được tạo từ **các tệp thực tế đang có trong `~/LTMANG`**; không liệt kê `build/`, `install/`, `log/` và toàn bộ các mesh riêng lẻ.
+
+```text
 LTMANG/
-├── rssi_sim.py          # node ROS 2 mô phỏng RSSI
-├── analyze_rssi.py      # CSV -> heatmap + đánh giá
-├── maps/
-│   ├── khuc.pgm         # bản đồ khu C quét từ thực tế
+├── README.md    # tài liệu tổng quan và hướng dẫn chạy
+├── rssi_sim.py    # node mô phỏng RSSI theo vị trí robot
+├── analyze_rssi.py    # phân tích CSV và tạo heatmap
+├── maps/    # bản đồ và world các thử nghiệm trước
+│   ├── khuc.pgm
 │   ├── khuc.yaml
-│   └── khuc.world       # world Gazebo sinh từ map để mô phỏng
-├── result_te1n/
+│   └── khuc.world
+├── result_te1n/    # kết quả RSSI đã thu thập trước đây
 │   ├── heatmap.png
 │   └── cells.csv
-└── img/                 # ảnh minh hoạ
+├── img/    # ảnh minh họa
+├── scripts/    # công cụ đồng bộ và quản lý dự án
+│   └── sync_ltmang_robot_sim.py
+└── simulation/    # bộ mô phỏng Mecanum / ROS 2 độc lập
+    ├── README.md    # hướng dẫn kỹ thuật chi tiết
+    ├── MANIFEST.sha256    # checksum snapshot mô phỏng
+    ├── maps/    # bản đồ Nav2 và world Gazebo hành lang
+    │   ├── my_map.yaml
+    │   ├── my_map.pgm
+    │   └── my_map_corridor.world
+    ├── config/    # cấu hình AMCL, Nav2 và Behavior Tree
+    │   ├── nav2_params_mecanum_sim.yaml
+    │   ├── nav2_params_mecanum_sim_test.yaml
+    │   └── nav2_recovery_backup_first.xml
+    ├── launch/    # launch robot cho world hành lang
+    │   └── mecanum_gazebo_corridor_repo.launch.py
+    ├── scripts/    # môi trường ROS 2, khởi chạy và relay lệnh
+    │   ├── sim_env.sh
+    │   ├── run_gazebo.sh
+    │   ├── run_localization.sh
+    │   ├── run_navigation.sh
+    │   ├── run_rviz.sh
+    │   ├── run_teleop.sh
+    │   └── mecanum_safe_cmd_relay.py
+    └── ros2_ws/    # workspace ROS 2 Humble (source được quản lý bằng Git)
+        └── src/
+            ├── mecanum_robot_viz/    # URDF và mô hình 3D robot
+            │   ├── urdf/    # mô tả robot Gazebo/RViz2
+            │   │   ├── mecanum_robot_gazebo_real_visual.urdf
+            │   │   └── mecanum_robot_rviz_real_visual.urdf
+            │   ├── meshes/    # mesh 3D (.dae/.stl/.obj); 8 file
+            │   └── launch/    # launch gốc của package robot
+            │       └── mecanum_gazebo_corridor_new.launch.py
+            ├── mecanum_visual_animator/    # plugin Gazebo tạo /joint_states và chuyển động bánh
+            └── keyboard_teleop/    # node điều khiển bàn phím; w/x/a/d/q/e
 ```
 
+Phần `maps/` và `result_te1n/` ở thư mục gốc lưu dữ liệu thực nghiệm cũ; `simulation/` chứa **robot, bản đồ, world, URDF, mesh 3D, Nav2 và script khởi chạy**. Hai file `rssi_sim.py` và `analyze_rssi.py` thực hiện thu thập và phân tích RSSI.
+
+Quy trình chính: **Gazebo → AMCL Localization → Nav2 / Keyboard Teleop → RSSI Simulator → CSV → Analysis → Heatmap**. Đối với điều khiển thủ công, **không** chạy Navigation song song với Keyboard Teleop.
+
 ## 6. Yêu cầu
-Ubuntu 22.04, ROS 2 Humble, Gazebo Classic, Nav2, slam_toolbox, Python 3 (numpy, scipy, matplotlib, PyYAML).
+
+**Môi trường:** Ubuntu 22.04, ROS 2 Humble, Gazebo Classic, Nav2 (`nav2_bringup`, `nav2_smac_planner`, DWB), `gazebo_ros`, `robot_state_publisher`, `tf2_ros`, `colcon` và Python 3.
+
+**Thư viện Python:** `numpy`, `scipy`, `matplotlib`, `PyYAML`; các gói Python của ROS 2 như `rclpy` được cung cấp theo bản cài ROS 2.
+
+**Robot và mô phỏng:** build các package trong `simulation/ros2_ws/src/`; sử dụng bản đồ `simulation/maps/my_map.yaml`, world `simulation/maps/my_map_corridor.world`, `use_sim_time: true`, `ROS_DOMAIN_ID=31`, `ROS_LOCALHOST_ONLY=1` trên PC mô phỏng.
+
+**Build (thực hiện một lần hoặc sau khi thay đổi source):**
+
+```bash
+cd ~/LTMANG/simulation/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install
+```
+
+**Khởi chạy (mỗi lệnh trong Terminal riêng):**
+
+```bash
+bash ~/LTMANG/simulation/scripts/run_gazebo.sh
+bash ~/LTMANG/simulation/scripts/run_localization.sh
+bash ~/LTMANG/simulation/scripts/run_navigation.sh
+bash ~/LTMANG/simulation/scripts/run_rviz.sh
+```
+
+**Điều khiển thủ công:** dừng Nav2 Navigation trước khi chạy `bash ~/LTMANG/simulation/scripts/run_teleop.sh` (nếu script và package đã được thêm).
+
+**RSSI & phân tích:** chạy `rssi_sim.py` sau khi TF `map → base_footprint` hợp lệ, ghi dữ liệu CSV; sau khi kết thúc thu thập, chạy `analyze_rssi.py` để tạo heatmap. Xem hướng dẫn chi tiết tại [`simulation/README.md`](simulation/README.md).
+
+> `slam_toolbox` chỉ cần khi tạo/quét bản đồ mới; **không bắt buộc** cho pipeline định vị AMCL trên bản đồ đã có. Nếu YAML dùng DWB critic tùy chỉnh `PreferForward`, cần cài được plugin tương ứng hoặc sử dụng cấu hình bỏ critic đó.
+
